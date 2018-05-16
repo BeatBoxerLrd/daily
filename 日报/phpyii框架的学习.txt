@@ -1,0 +1,289 @@
+下载解压后将basic放在htdos的目录下
+
+一、首先是要测试yii框架本地是否安装成功
+
+http://localhost:8000/basic/index.php
+
+二、创建前端控制器
+
+控制器需要在controllers目录下进行创建
+然后控制器的命名应该是以 eg:  HelloController
+文件里面应该有一个类HelloController 去继承  Controller;
+还必须将命名空间设置为 namespace app\controllers;
+由于继承了Controller，所有要引用命名空间， use yii\web\controller;
+里面还要去定义一个函数，处理请求的方法（操作），公有的，必须以action为开始，
+
+eg:
+
+<?php
+	namespace app\controllers;
+	use yii\web\Controller;
+	
+	class HelloController extends Controller{
+		
+		public function actionIndex(){
+			echo 'hello world!';
+		}
+		
+	}
+	
+?>
+
+访问时： http://localhost:8000/basic/index.php?r=hello/index
+
+三、前端控制器中的请求参数的处理
+在yii框架中有一个全局的类YII，里面有一个静态变量$app,开始时会加载所有组件
+
+$request = \YII::$app->request;
+$request->get('id');
+$request->isGet();
+$request->isPost();
+$request->userIp;
+
+四、响应组件
+
+	
+			
+			//$res = \YII::$app->response;
+			//$res->statusCode = '404';
+			//$res->headers->add('pragma','no-cache');
+			//$res->headers->set('pragma','max-age=5');
+			//$res->headers->remove('pragma');
+			//跳转
+			//$res->headers->add('location','http://www.baidu.com');
+			//跳转需要的代码
+			//$this->redirect('http://www.baidu.com',302);
+
+五、文件的下载
+			//$res->headers->add('content-disposition','attachment;filename="a.jpg"');
+			//$res->sendFile('./robots.txt');
+			
+六、session
+
+			//$session = \YII::$app->session;
+			//$session->open();
+			//$session->close();
+			/*if($session->isActive){
+				echo "session is active";
+			}*/
+			//$session->set('user','张三');
+			//echo $session->get('user');
+			//$session->remove('user');
+			
+			
+			//都是实现了ArrayAccess接口，把所有实现了他的类都可以当数组来处理
+			//$session['user'] = '张三';
+			//echo $session['user'];
+			//unset($session['user']);
+			//$session['user'] = '张三';
+			//echo $session['user'];
+七、cookie
+
+
+			//cookies
+			//$cookies = \YII::$app->response->cookies;
+			//$cookie_data = array('name'=>'user','value'=>'zhangsan');
+			//$cookies->add(new Cookie($cookie_data));
+			//删除某一条id对应的cookie
+			//$cookies->remove('_csrf');
+			
+			//如何获取了浏览器中cookie中的值
+			//$cookies = \YII::$app->request->cookies;
+			//echo $cookies->getValue('user');
+			//echo $cookies->getValue('users',20);
+
+八、html代码存放在php/htdocs/basic/views中
+
+首先还需要创建对应的视图解析器
+//对应的显示界面的index.php
+	return  $this->renderPartial('index');
+
+
+服务器端将数组传递给view
+1.可以封装成数组，在view中<?=$key;?>,将会显示对应的值
+			$hello_str =  'hello god!';
+			//需要创建一个数组
+			$data = array();
+			//把需要传递给视图的数据放在数组当中
+			$data['view_hello_str'] = $hello_str;
+			return $this->renderPartial('index',$data);
+2.数据安全的处理
+		$hello_str =  'hello god!<script>alert(3);</script>';
+<?php
+	use yii\helpers\Html;
+	use  yii\helpers\HtmlPurifier;
+?>
+
+<h1>
+	
+	<?=Html::encode($view_hello_str);?>
+	<?=HtmlPurifier::process($view_hello_str);?>
+	<br>
+	<?=$view_hello_str;?>
+	<br>
+	<?=$view_test_str[0];?>
+<h1>
+
+3.减少代码冗余的处理方法
+
+//此方法会有两个作用，第一个会把视图文件放在$content中，第二个作用会显示common这个布局文件
+		return $this->render('about');//$content
+
+
+		public $layout = 'common';//这个加在行为上边
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+	</head>
+	<body>
+		<?=$content;?>
+	</body>
+</html>
+
+
+4. 在一个视图中显示另一个视图
+			//在一个视图中显示调用另一个视图
+			return $this->renderPartial('index');
+
+
+<h1>hello index!</h1>
+<?php
+	echo $this->render('about',array('v_hello_str'=>'hello'));
+?>
+
+
+hello about！
+<?=$v_hello_str?>
+
+
+5.视图之数据块
+<!--定义一个数据块-->
+<?php
+	$this->beginBlock('block1');
+?>
+<h1>index</h1>
+<?php
+	$this->endBlock();
+?>
+
+
+<?=$this->blocks['block1']?>
+
+
+
+九、数据层
+连接mysql数据库，然后在basic/modles里建立实体表
+在basic/config里面配置db.php，可以配置访问的密码等一系列信息
+mysql -uroot -p
+1.可以配置数据库输入密码即可，初始化的密码为空
+
+2.配置实体类
+?php
+	namespace app\models;
+	use yii\db\ActiveRecord;
+	class Test extends ActiveRecord{
+		
+	}
+?>
+
+3.controller层的调用
+
+	namespace app\controllers;
+	use yii\web\Controller;
+	use app\models\Test;
+	
+	class TestController extends Controller{
+		public function actionIndex(){
+			//Test查询数据  
+			// id = 1 or 1 = 1
+			$sql = 'select * from test where id=1';
+			//findBySql可以防止sql注入攻击
+			$result = Test::findBySql($sql)->all();
+			print_R($result);
+		}
+		
+	}
+	
+4.防止sql注入攻击
+可以使用findBySql进行执行sql语句
+select * from test where id =:id;
+findBySql($sql,array(':id'=>'1 or 1=1'))->all();
+或者成功执行，或者报错
+
+
+
+
+5.查询
+//Test查询数据  
+			// id = 1 or 1 = 1
+			//$sql = 'select * from test where id=1';
+			//findBySql可以防止sql注入攻击
+			//$result = Test::findBySql($sql)->all();
+			//print_R($result);
+			
+			//$results = Test::find()->where(['id'=>1])->all();
+			
+			//id>0
+			//$results = Test::find()->where(['>','id',0])->all();
+			
+			//id>=1且id<=2
+			//$results = Test::find()->where(['between','id',1,2])->all();
+			
+			//title like "%title1%"
+			//$results = Test::find()->where(['like','title','title'])->all();
+			
+6.查询优化
+//将查询结果转化为数组
+			$results = Test::find()->where(['like','title','title'])->asArray()->all();
+
+//批量查询
+			foreach(Test::find()->batch(2) as $tests){
+				print_R(count($tests));
+			}
+
+
+7.删除单表数据
+
+//删除数据
+			//$result = Test::find()->where(['id'=>1])->all();
+			//$result[0]->delete();
+			//Test::deleteAll('id>:id',array(':id'=>0));
+8.增加数据
+
+增加时验证，可以在增加时在Test实体类中加入验证
+
+		public function rules(){
+			return [
+				['id','integer'],
+				['title','string','length'=>[0,6]]
+			];
+		}
+
+
+//增加数据
+			$test = new Test;
+			$test->id=5;
+			$test->title='title5';
+			//之前进行验证
+			$test->validate();
+			if($test->hasErrors()){
+				echo '数据有误！';
+				die;
+			}
+			$test->save();
+
+9.修改数据
+//修改数据
+			$test = Test::find()->where(['id'=>5])->one();
+			$test->title = 'utitle';
+			$test->save();
+			
+
+
+
+

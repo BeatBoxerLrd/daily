@@ -1,0 +1,136 @@
+表单下拉单选框：
+
+<select name="q">
+	<option value = ""></option>
+</select>
+<input type="submit" value="提交">
+
+表单下拉菜单多选框
+
+<select multiply="multiple" name="q[]">
+	<option></option>
+</select>
+
+单选按钮表单：
+
+<input type="radio" name="q" value="taobao">taobao
+
+
+checkbox复选框：
+
+<input type="checkbox" name="q[]" value = "taobao">淘宝
+
+ $_SERVER["PHP_SELF"] 会发送表单数据到当前页面
+
+什么是 htmlspecialchars()方法?
+
+htmlspecialchars() 函数把一些预定义的字符转换为 HTML 实体。
+
+
+
+php中的日期
+
+date("y-m-d");  $e->birthdate = date('m/d/Y h:i:s a', "8/5/1974 12:20:03 p");
+
+
+php中的保含语句
+
+vars.php
+<?php
+$color='red';
+$car='BMW';
+?>
+
+
+<?php 
+include 'vars.php';
+echo "I have a $color $car"; // I have a red BMW
+?>
+
+
+require()，不建议使用，在错误发生之后脚本会停止执行
+建议使用Include（）语句
+
+PHP文件处理  
+$file = fopen("文件名","打开方式")；
+fclose($file);关闭文件
+feof($file);检测是否到达文件末尾
+fgets();逐行读取文件
+fgetc();逐字符读取
+
+
+html的lable标签 
+就是在一个范围内点击都是可以的
+
+php的文件上传
+
+<?php
+if ($_FILES["file"]["error"] > 0)
+{
+    echo "错误：" . $_FILES["file"]["error"] . "<br>";
+}
+else
+{
+    echo "上传文件名: " . $_FILES["file"]["name"] . "<br>";
+    echo "文件类型: " . $_FILES["file"]["type"] . "<br>";
+    echo "文件大小: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+    echo "文件临时存储的位置: " . $_FILES["file"]["tmp_name"];
+}
+?>
+通过使用 PHP 的全局数组 $_FILES，php的全局文件上传数组
+
+
+如何取回 Cookie 的值？
+PHP 的 $_COOKIE 变量用于取回 cookie 的值。
+设置cookie
+<?php
+$expire=time()+60*60;
+setcookie("user", "runoob", $expire);
+?>
+删除cookie
+<?php
+// 设置 cookie 过期时间为过去 1 小时
+setcookie("user", "", time()-3600);
+?>
+
+
+
+php中的session
+
+<?php
+session_start();
+// 存储 session 数据
+$_SESSION['views']=1;
+?>
+
+<?php
+// 检索 session 数据
+echo "浏览量：". $_SESSION['views'];
+?>
+
+
+<?php
+session_start();
+if(isset($_SESSION['views']))
+{
+    unset($_SESSION['views']);
+}
+?>
+unset用于销毁指定的session
+
+<?php
+session_destroy();
+?>
+调用该方法会将销毁session
+
+
+php中的error处理
+如果文件不存在可以用die()语句进行处理
+
+
+
+php中的json字符串
+  对其进行编码
+  echo json_encode($e);
+
+

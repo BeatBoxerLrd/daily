@@ -1,0 +1,14 @@
+命名空间：
+namespace a\b\c;
+
+
+
+// 这个表示下面都是这个命名空间的
+use a\b\c\Apple();
+//以后就可以用BApple();
+use a\b\c\Apple() as BApple();
+//这个表示引用无命名空间的
+$c = new \Apple();
+
+
+

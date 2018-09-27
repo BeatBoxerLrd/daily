@@ -1,0 +1,51 @@
+package main.java.com.offer.replaceSpace;
+
+/**
+ * @Author:LiuRuidong
+ * @Description: 替换空格
+ * we are happy  ==> we%20are%20happy
+ * @Date: Created in 23:49 2018/9/27
+ * @Modified By:
+ */
+public class ReplaceSpace {
+    /**
+     * @Author：LiuRuidong
+     * @Description: 替换空格，思想，从前往后替换，移动元素的数量过大，时间复杂度过高，所以从后往前进行替换
+     * @Date:2018/9/28 0:19
+     * @Param:一个数组
+     * @return 返回替换完成之后的数组
+     */
+    public static  String replaceSpace(StringBuffer st){
+        int spacenum = 0;
+        if(st == null||st.length()<=0){
+            return "";
+        }
+        //先遍历一遍，计算字符串中的空格数
+        for (int i = 0; i <st.length() ; i++) {
+            if(st.charAt(i)==' '){
+                spacenum++;
+            }
+        }
+        //旧字符串的长度
+        int oldLength = st.length()-1;
+        int newLength = st.length()+spacenum*2-1;
+        //st必为StringBuffer格式，String不可变
+        st.setLength(newLength+1);
+        while(oldLength<newLength&&oldLength>-1){
+            if(st.charAt(oldLength) == ' '){
+                 st.setCharAt(newLength--,'0');
+                 st.setCharAt(newLength--,'2');
+                 st.setCharAt(newLength--,'%');
+            }else {
+                 st.setCharAt(newLength--,st.charAt(oldLength));
+            }
+            oldLength--;
+        }
+        return st.toString();
+    }
+    public static void main(String[] args) {
+        StringBuffer sb = new StringBuffer("hello world");
+        System.out.println(replaceSpace(sb));
+    }
+}
+

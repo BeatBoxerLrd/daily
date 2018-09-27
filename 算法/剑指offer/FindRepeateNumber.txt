@@ -1,0 +1,51 @@
+package main.java.com.offer.findRepeatNumber;
+
+import java.lang.management.ThreadInfo;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+/**
+ * @Author:LiuRuidong
+ * @Description:
+ * @Date: Created in 15:28 2018/9/23
+ * @Modified By:
+ */
+public class FindRepeateNumber {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        String st = scan.nextLine();
+        String string[] = st.split(" ");
+        int[] nums = new int[string.length];
+        for (int i = 0; i <nums.length; i++) {
+            nums[i] = Integer.valueOf(string[i]);
+        }
+        find(nums);
+    }
+    public static void find(int[] nums){
+        if(nums.length <= 0){
+            System.out.println("NO!");
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if(nums[i]<0||nums[i]>nums.length-1){
+                System.out.println("NO!");
+            }
+        }
+        for (int i = 0; i <nums.length ; i++) {
+            while (nums[i] != i) {
+                //判断是否相等,相等即重复
+                if (nums[i] == nums[nums[i]]) {
+                    System.out.println("重复数字为" + nums[i]);
+                    break;
+                }
+                //否则则进行交换
+                int temp = nums[i];
+                nums[i] = nums[nums[i]];
+                nums[temp] = temp;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,16 @@
+package main.java.com.offer.preInCreateTree;
+
+/**
+ * @Author:LiuRuidong
+ * @Description: BTNode结点，用于树的操作
+ * @Date: Created in 20:46 2018/9/27
+ * @Modified By:
+ */
+public class BTNode {
+    int data;
+    BTNode left;
+    BTNode right;
+    public BTNode(int data){
+        this.data = data;
+    }
+}

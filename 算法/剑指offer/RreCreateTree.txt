@@ -1,0 +1,42 @@
+package main.java.com.offer.preInCreateTree;
+
+/**
+ * @Author:LiuRuidong
+ * @Description: 重建二叉树
+ * @Date: Created in 21:10 2018/9/27
+ * @Modified By:
+ */
+public class RreCreateTree {
+    //先序中序还原树
+    public static BTNode reBuildBTNode(int[] pre,int preStart,int preEnd,int[] in,int inStart,int inEnd){
+        if(preStart>preEnd || inStart>inEnd){
+            return null;
+        }
+        BTNode bt = new BTNode(pre[preStart]);
+        for(int i=0;i<inEnd;i++){
+            if(pre[preStart] == in[i]){
+                bt.left = reBuildBTNode(pre,preStart+1,preStart+i-inStart,in,inStart,i-1);
+                bt.right= reBuildBTNode(pre,preStart+i-inStart+1,preEnd,in,i+1,inEnd);
+                break;
+            }
+        }
+        return bt;
+    }
+    //后序递归打印树
+    public static void printBTNode(BTNode root){
+        if(root==null){
+            return;
+        }
+        printBTNode(root.left);
+        printBTNode(root.right);
+        System.out.print(root.data+" ");
+    }
+    public static void main(String[] args) {
+        int[] pre = {1,2,4,5,3,6,7};
+        int[] in = {4,2,5,1,6,3,7};
+        BTNode root = RreCreateTree.reBuildBTNode(pre,0,pre.length-1,in,0,in.length-1);
+        //后序
+        printBTNode(root);
+    }
+
+}
